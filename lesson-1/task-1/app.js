@@ -8,48 +8,27 @@ const asyncRenameFile = util.promisify(fs.rename);
 const girlsFolderPath = path.join(__dirname, 'girls');
 const boysFolderPath = path.join(__dirname, 'boys');
 
-function movetoBoysFolder() {
-    fs.readdir(girlsFolderPath, (err, files) => {
+function movetoCorrectFolder(currentFolder, searchFolder, param){
+    fs.readdir(currentFolder, (err, files) => {
         if (err) {
             console.log(err);
             return;
         }
 
         files.forEach(async (fileName) => {
-            const currentFilePath = path.join(girlsFolderPath, fileName);
+            const currentFilePath = path.join(currentFolder, fileName);
 
             let result = await asyncReadFile(currentFilePath);
 
             const parsedFileData = JSON.parse(result.toString())
-            if (parsedFileData.gender === 'male') {
-                await asyncRenameFile(girlsFolderPath + '/' + fileName, boysFolderPath + '/' + fileName)
+            if (parsedFileData.gender === param) {
+                await asyncRenameFile(currentFolder + '/' + fileName, searchFolder + '/' + fileName)
             }
 
         })
 
-    })
+    })  
 }
 
-function movetoGirlsFolder() {
-    fs.readdir(boysFolderPath, (err, files) => {
-        if (err) {
-            console.log(err);
-            return;
-        }
-
-        files.forEach(async (fileName) => {
-            const currentFilePath = path.join(boysFolderPath, fileName);
-
-            let result = await asyncReadFile(currentFilePath);
-
-            const parsedFileData = JSON.parse(result.toString())
-            if (parsedFileData.gender === 'female') {
-                await asyncRenameFile(boysFolderPath + '/' + fileName, girlsFolderPath + '/' + fileName)
-            }
-
-        })
-
-    })
-}
-movetoGirlsFolder()
-movetoBoysFolder()
+movetoCorrectFolder(girlsFolderPath, boysFolderPath, 'male')
+movetoCorrectFolder(boysFolderPath, girlsFolderPath, 'female')
