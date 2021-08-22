@@ -15,17 +15,14 @@
 
     <div class="login-wrapper">
 
-        <h1 class="title">List of Users</h1>
+        <h1 class="title">User Info</h1>
 
-        {{#each usersArray}}
-        <p>Name: {{this.email}}</p>
-        <p>Password: {{this.password}}</p>
 
-        <a href="/users/{{this.id}}">
-            <input type="submit" value="More information" class="button">        
-        </a>
+        <p>Name: {{userInfo.email}}</p>
+        <p>Password: {{userInfo.password}}</p>
+         <p>Password: {{userInfo.id}}</p>
         <hr>
-        {{/each}}
+ 
 
     </div>
 

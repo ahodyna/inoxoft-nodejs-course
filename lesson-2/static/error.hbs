@@ -15,17 +15,20 @@
 
     <div class="login-wrapper">
 
-        <h1 class="title">List of Users</h1>
+        <h1 class="title">Error</h1>
 
-        {{#each usersArray}}
-        <p>Name: {{this.email}}</p>
-        <p>Password: {{this.password}}</p>
+        <div class="login-block">
 
-        <a href="/users/{{this.id}}">
-            <input type="submit" value="More information" class="button">        
-        </a>
-        <hr>
-        {{/each}}
+            <h1>Something went wrong</h1>
+            <p>{{error}}</p>
+
+            <h2>Please click button</h2>
+            <button onclick="goBack()">Go Back</button>
+
+        </div>
+
+
+
 
     </div>
 
