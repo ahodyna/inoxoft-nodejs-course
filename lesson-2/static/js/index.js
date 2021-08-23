@@ -8,7 +8,6 @@ function getMoreInfo(clientId){
   });
 }
 
-
 function goBack() {
     window.history.back();
   }

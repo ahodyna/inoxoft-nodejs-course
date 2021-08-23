@@ -12,24 +12,23 @@
 
 <body>
 
-
     <div class="login-wrapper">
 
         <h1 class="title">List of Users</h1>
 
+        <h3>Hello, {{userEmail}}</h3>
+
         {{#each usersArray}}
-        <p>Name: {{this.email}}</p>
+        <p>Email: {{this.email}}</p>
         <p>Password: {{this.password}}</p>
 
         <a href="/users/{{this.id}}">
-            <input type="submit" value="More information" class="button">        
+            <input type="submit" value="More information" class="button">
         </a>
         <hr>
         {{/each}}
 
     </div>
-
-
 
 </body>
 

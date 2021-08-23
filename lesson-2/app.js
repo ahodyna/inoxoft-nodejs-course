@@ -8,9 +8,11 @@ const asyncReadFile = util.promisify(fs.readFile);
 
 const { PORT } = require('./configs/config');
 
-
 const app = express();
+
 const staticPath = path.join(__dirname, 'static');
+const dbFilePath = path.join(__dirname, '/dataBase/users.json')
+
 app.listen(PORT, () => {
   console.log(`App listening at http://localhost:${PORT}`)
 })
@@ -22,11 +24,6 @@ app.set('view engine', '.hbs');
 app.engine('.hbs', expressHbs({ defaultLayout: false }));
 app.set('views', staticPath);
 
-
-const dbFilePath = path.join(__dirname, '/dataBase/users.json')
-
-const error = 'Type correct password'
-
 app.get('/login', (req, res) => {
   res.render('login')
 })
@@ -37,52 +34,41 @@ app.get('/register', (req, res) => {
 
 app.post('/users', async (req, res) => {
   const { email, password } = req.body;
-  let readFileInfo = await asyncReadFile(dbFilePath)
-  let usersArray = JSON.parse(readFileInfo.toString())
+  const readFileInfo = await asyncReadFile(dbFilePath)
+  const usersArray = JSON.parse(readFileInfo.toString())
 
-  const userEmail = usersArray.find(user => user.email === email);
-  const userPassword = usersArray.find(user => user.password === password);
+  const userFindByEmail = usersArray.find(user => user.email === email);
+  const userFindByPassword = usersArray.find(user => user.password === password);
 
-  if (userEmail === undefined) {
-    res.status(404).render('error');
+  if (userFindByEmail === undefined) {
+    res.status(404).render('error', { error: 'Type correct email' });
     return;
-  } else if (userPassword === undefined) {
-    res.status(404).render('error',  {error});
+  } else if (userFindByPassword === undefined) {
+    res.status(404).render('error', { error: 'Type correct password' });
     return;
   } else {
-
-    res.render('listUsers', { usersArray });
+    res.render('listUsers', { usersArray, userEmail: userFindByEmail.email });
   }
 });
 
 app.get('/users/:user_id', async (req, res) => {
-  let readFileInfo = await asyncReadFile(dbFilePath);
-  let usersArray = JSON.parse(readFileInfo.toString());
+  const readFileInfo = await asyncReadFile(dbFilePath);
+  const usersArray = JSON.parse(readFileInfo.toString());
   const { user_id } = req.params;
-  
-  console.log('user_id', user_id)
-
-  const userInfo = usersArray.find(user => user.id === user_id );
-
-
-  res.render('userInfo', userInfo)
+  const userInfo = usersArray.find(user => user.id === user_id);
+  res.render('userInfo', { userInfo })
 });
-
-
-// 123
-
 
 app.post('/create', async (req, res) => {
   const { email, password } = req.body;
-  let readFileInfo = await asyncReadFile(dbFilePath);
-  let usersArray = JSON.parse(readFileInfo.toString());
+  const readFileInfo = await asyncReadFile(dbFilePath);
+  const usersArray = JSON.parse(readFileInfo.toString());
 
   const userData = { "email": email, "password": password, "id": '_' + Math.random().toString(36).substr(2, 9) };
+  const userFindByEmail = usersArray.find(user => user.email === email);
 
-  const userEmail = usersArray.find(user => user.email === email);
-
-  if (userEmail) {
-    res.status(404).end('This email has already been registered before ');
+  if (userFindByEmail) {
+    res.status(404).render('error', { error: 'This email has already been registered before' });
     return;
   } else {
     usersArray.push(userData)
@@ -90,8 +76,7 @@ app.post('/create', async (req, res) => {
       if (err) {
         return console.log(err);
       }
-      console.log("The file was saved!");
-    });
-    res.render('listUsers');
+    })
+    res.render('listUsers', { usersArray, userEmail: userData.email })
   }
 });
