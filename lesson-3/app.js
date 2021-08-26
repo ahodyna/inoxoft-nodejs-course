@@ -15,11 +15,11 @@ app.set('view engine', '.hbs');
 app.engine('.hbs', expressHbs({ defaultLayout: false }));
 app.set('views', staticPath);
 
-const {authRouter, userRouter} = require('./router');
+const { authRouter, userRouter } = require('./router');
 
 app.use('/auth', authRouter);
 app.use('/users', userRouter);
 
 app.listen(PORT, () => {
-  console.log(`App listening at http://localhost:${PORT}`)
-})
+    console.log(`App listening at http://localhost:${PORT}`);
+});

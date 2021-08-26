@@ -1,0 +1,22 @@
+{
+  "name": "inoxoft-nodejs-course",
+  "version": "1.0.0",
+  "description": "",
+  "main": ".eslintrc.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahodyna/inoxoft-nodejs-course.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ahodyna/inoxoft-nodejs-course/issues"
+  },
+  "homepage": "https://github.com/ahodyna/inoxoft-nodejs-course#readme",
+  "dependencies": {
+    "eslint-config-airbnb-base": "^14.2.1"
+  }
+}

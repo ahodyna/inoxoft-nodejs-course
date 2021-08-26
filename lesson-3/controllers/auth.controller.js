@@ -1,11 +1,10 @@
 module.exports = {
 
     getRegisterPage: (req, res) => {
-        res.render('register')
+        res.render('register');
     },
 
     getLoginPage: (req, res) => {
-        res.render('login')
+        res.render('login');
     },
-
 };
