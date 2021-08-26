@@ -18,14 +18,15 @@ module.exports = {
 
         const userFindByEmail = await findUserByEmail(email);
 
-        if (userFindByEmail === undefined) {
+        if (!userFindByEmail) {
             res.status(404).render('error', { error: 'Type correct email' });
         } else if (userFindByEmail.password !== password) {
             res.status(404).render('error', { error: 'Type correct password' });
-        } else {
-            const usersArray = await getAllUsers();
-            res.render('listUsers', { usersArray, userEmail: userFindByEmail.email });
         }
+        const usersArray = await getAllUsers();
+        res.render('listUsers', { usersArray, userEmail: userFindByEmail.email });
+        return;
+
     },
 
     registerUser: async (req, res) => {
@@ -41,10 +42,11 @@ module.exports = {
 
         if (userFindByEmail) {
             res.status(404).render('error', { error: 'This email has already been registered before' });
-        } else {
-            await createUser(userData);
-            const usersArray = await getAllUsers();
-            res.render('listUsers', { usersArray, userEmail: userData.email });
         }
+        await createUser(userData);
+        const usersArray = await getAllUsers();
+        res.render('listUsers', { usersArray, userEmail: userData.email });
+        return;
+
     }
 };
