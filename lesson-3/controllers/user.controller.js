@@ -1,8 +1,9 @@
-const { readFile, findUserByEmail, createUser,getUserInfo, getAllUsers } = require('../services/services');
+const { findUserByEmail, createUser, getUserInfo, getAllUsers } = require('../services/services');
 
 module.exports = {
 
     getUserById: async (req, res) => {
+
         const { user_id } = req.params;
         const userInfo = await getUserInfo(user_id)
 
@@ -10,6 +11,7 @@ module.exports = {
     },
 
     loginUser: async (req, res) => {
+
         const { email, password } = req.body;
 
         const userFindByEmail = await findUserByEmail(email)
@@ -27,6 +29,7 @@ module.exports = {
     },
 
     registerUser: async (req, res) => {
+
         const { email, password } = req.body;
 
         const userData = { "email": email, "password": password, "id": '_' + Math.random().toString(36).substr(2, 9) };
@@ -37,7 +40,8 @@ module.exports = {
             res.status(404).render('error', { error: 'This email has already been registered before' });
             return;
         } else {
-            const usersArray = await createUser(userData)
+            await createUser(userData);
+            const usersArray = await getAllUsers();
             res.render('listUsers', { usersArray, userEmail: userData.email })
         }
     }
