@@ -1,13 +1,14 @@
 const { User } = require('../dataBase');
+const statusCode = require('../configs/statusCodes.enum');
 
 module.exports = {
     getUserById: async (req, res, next) => {
         try {
             const { user_id } = req.params;
 
-            const user = await User.findOne({ id: user_id });
+            const user = await User.findById(user_id)
 
-            res.status(200).json(user);
+            res.status(statusCode.OK).json(user);
         } catch (e) {
             next(e);
         }
@@ -17,7 +18,7 @@ module.exports = {
         try {
             const users = await User.find({});
 
-            res.status(200).json(users);
+            res.status(statusCode.OK).json(users);
         } catch (e) {
             next(e);
         }
@@ -28,7 +29,7 @@ module.exports = {
             const { user_id } = req.params;
             await User.findByIdAndDelete(user_id);
 
-            res.status(201).json('deleted');
+            res.status(statusCode.OK).json('deleted');
         } catch (e) {
             next(e);
         }
@@ -38,7 +39,7 @@ module.exports = {
         try {
             const user = await User.create(req.body);
 
-            res.status(201).json(user);
+            res.status(statusCode.CREATED).json(user);
         } catch (e) {
             next(e);
         }
@@ -48,7 +49,7 @@ module.exports = {
             const { user_id } = req.params;
             const user = await User.findByIdAndUpdate(user_id, req.body);
 
-            res.status(204).json(user);
+            res.status(statusCode.OK).json(user);
         } catch (e) {
             next(e);
         }

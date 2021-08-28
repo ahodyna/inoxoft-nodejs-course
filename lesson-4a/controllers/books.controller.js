@@ -1,13 +1,14 @@
 const { Book } = require('../dataBase');
+const statusCode = require('../configs/statusCodes.enum');
 
 module.exports = {
     getBookById: async (req, res, next) => {
         try {
             const { book_id } = req.params;
 
-            const book = await Book.findOne({ id: book_id });
+            const book = await User.findById(book_id)
 
-            res.status(200).json(book);
+            res.status(statusCode.OK).json(book);
         } catch (e) {
             next(e);
         }
@@ -17,7 +18,7 @@ module.exports = {
         try {
             const books = await Book.find({});
 
-            res.status(200).json(books);
+            res.status(statusCode.OK).json(books);
         } catch (e) {
             next(e);
         }
@@ -28,7 +29,7 @@ module.exports = {
             const { books_id } = req.params;
             await Book.findByIdAndDelete(books_id);
 
-            res.status(201).json('deleted');
+            res.status(statusCode.OK).json('deleted');
         } catch (e) {
             next(e);
         }
@@ -38,7 +39,7 @@ module.exports = {
         try {
             const book = await Book.create(req.body);
 
-            res.status(201).json(book);
+            res.status(statusCode.CREATED).json(book);
         } catch (e) {
             next(e);
         }
@@ -48,7 +49,7 @@ module.exports = {
             const { book_id } = req.params;
             const updatedBook = await Book.findByIdAndUpdate(book_id, req.body);
 
-            res.status(204).json(updatedBook);
+            res.status(statusCode.OK).json(updatedBook);
         } catch (e) {
             next(e);
         }
