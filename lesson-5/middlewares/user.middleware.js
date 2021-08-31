@@ -20,7 +20,7 @@ module.exports = {
         }
     },
 
-    isUserByIdExist: async (req, res, next) => {
+    isIdValid: async (req, res, next) => {
         try {
             const { user_id } = req.params;
             const { error} = userValidators.idValidator.validate({id: user_id})
@@ -53,5 +53,19 @@ module.exports = {
         } catch (e) {
             next(e)
         }
-    }
+    },
+    isUserByIdExist: async (req, res, next) => {
+        try {
+            const { user_id } = req.params;
+
+            const user = await User.findById(user_id).select('+password');
+
+            if (!user) {
+                throw new ErrorHandler(statusCode.NOT_FOUND, 'User not found');
+            }
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
 };

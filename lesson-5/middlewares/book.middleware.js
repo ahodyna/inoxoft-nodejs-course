@@ -19,7 +19,7 @@ module.exports = {
             next(e);
         }
     },
-    isBookByIdExist: async (req, res, next) => {
+    isIdBookValid: async (req, res, next) => {
         try {
             const { book_id } = req.params;
             const { error } = userValidators.idValidator.validate({ id: book_id })
@@ -52,5 +52,19 @@ module.exports = {
         } catch (e) {
             next(e)
         }
-    }
+    },
+    isBookByIdExist: async (req, res, next) => {
+        try {
+            const { book_id } = req.params;
+
+            const book = await Book.findById(book_id);
+
+            if (!book) {
+               throw new ErrorHandler(statusCode.NOT_FOUND, 'Book not found')
+            }
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
 };

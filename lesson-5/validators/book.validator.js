@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const oidJoi = require('joi-oid');
 
 const createBookValidator = Joi.object({
     name: Joi.string().min(2).max(30).required(),
