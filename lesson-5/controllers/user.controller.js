@@ -46,7 +46,7 @@ module.exports = {
             const user = await User.create({ ...req.body, password: hashPassword });
 
             const normalizedUser = userUtil.userNormalizator(user);
-            res.status(201).json(normalizedUser);
+            res.status(statusCode.CREATED).json(normalizedUser);
         } catch (e) {
             next(e);
         }
