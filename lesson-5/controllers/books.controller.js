@@ -6,9 +6,9 @@ module.exports = {
         try {
             const { book_id } = req.params;
 
-            const book = await User.findById(book_id)
+            const book = await Book.findById(book_id)
 
-            res.status(statusCode.OK).json(book);
+            res.json(book);
         } catch (e) {
             next(e);
         }
@@ -18,7 +18,7 @@ module.exports = {
         try {
             const books = await Book.find({});
 
-            res.status(statusCode.OK).json(books);
+            res.json(books);
         } catch (e) {
             next(e);
         }
@@ -29,7 +29,7 @@ module.exports = {
             const { books_id } = req.params;
             await Book.findByIdAndDelete(books_id);
 
-            res.status(statusCode.OK).json('deleted');
+            res.json('deleted');
         } catch (e) {
             next(e);
         }
@@ -49,7 +49,7 @@ module.exports = {
             const { book_id } = req.params;
             const updatedBook = await Book.findByIdAndUpdate(book_id, req.body);
 
-            res.status(statusCode.OK).json(updatedBook);
+            res.json(updatedBook);
         } catch (e) {
             next(e);
         }

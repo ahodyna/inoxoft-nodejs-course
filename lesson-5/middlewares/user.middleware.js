@@ -1,6 +1,7 @@
 const { User } = require('../dataBase');
 const ErrorHandler = require('../errors/ErrorHandler');
 const userValidators = require('../validators/user.validator')
+const statusCode = require('../configs/statusCodes.enum');
 
 module.exports = {
     isEmailExist: async (req, res, next) => {
@@ -10,7 +11,7 @@ module.exports = {
             const userByEmail = await User.findOne({ email: email.trim() });
 
             if (userByEmail) {
-                throw new ErrorHandler(409, 'Email is already exist');
+                throw new ErrorHandler(statusCode.EXIST, 'Email is already exist');
             }
 
             next();
@@ -26,7 +27,7 @@ module.exports = {
             const user = await User.findById(user_id).select('-password');
 
             if (!user) {
-                throw new ErrorHandler(404, 'User not found');
+                throw new ErrorHandler(statusCode.NOT_FOUND, 'User not found');
             }
 
             next();
@@ -34,12 +35,11 @@ module.exports = {
             next(e);
         }
     },
-
     isValidUserData: (req, res, next) => {
         try{
             const {error, value} = userValidators.createUserValidator.validate(req.body)
             if(error){
-                throw new ErrorHandler(400, error.details[0].message)
+                throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message)
             }
             next()
         }catch(e){
@@ -50,7 +50,7 @@ module.exports = {
         try{
             const {error, value} = userValidators.updateUserValidator.validate(req.body)
             if(error){
-                throw new ErrorHandler(400, error.details[0].message)
+                throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message)
             }
             next()
         }catch(e){
