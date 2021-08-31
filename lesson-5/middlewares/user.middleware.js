@@ -23,37 +23,34 @@ module.exports = {
     isUserByIdExist: async (req, res, next) => {
         try {
             const { user_id } = req.params;
-
-            const user = await User.findById(user_id).select('-password');
-
-            if (!user) {
-                throw new ErrorHandler(statusCode.NOT_FOUND, 'User not found');
+            const { error} = userValidators.idValidator.validate({id: user_id})
+            if (error) {
+                throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message)
             }
-
             next();
         } catch (e) {
             next(e);
         }
     },
     isValidUserData: (req, res, next) => {
-        try{
-            const {error, value} = userValidators.createUserValidator.validate(req.body)
-            if(error){
+        try {
+            const { error, value } = userValidators.createUserValidator.validate(req.body)
+            if (error) {
                 throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message)
             }
             next()
-        }catch(e){
+        } catch (e) {
             next(e)
         }
     },
-    isUpdateUserValidator: (req, res, next) =>{
-        try{
-            const {error, value} = userValidators.updateUserValidator.validate(req.body)
-            if(error){
+    isUpdateUserValidator: (req, res, next) => {
+        try {
+            const { error, value } = userValidators.updateUserValidator.validate(req.body)
+            if (error) {
                 throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message)
             }
             next()
-        }catch(e){
+        } catch (e) {
             next(e)
         }
     }

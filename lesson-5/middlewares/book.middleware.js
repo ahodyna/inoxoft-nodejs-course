@@ -22,13 +22,10 @@ module.exports = {
     isBookByIdExist: async (req, res, next) => {
         try {
             const { book_id } = req.params;
-
-            const book = await Book.findById(book_id);
-
-            if (!book) {
-                throw new ErrorHandler(statusCode.NOT_FOUND, 'Book not found');
+            const { error } = userValidators.idValidator.validate({ id: book_id })
+            if (error) {
+                throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message)
             }
-
             next();
         } catch (e) {
             next(e);

@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const oidJoi = require('joi-oid')
 const { EMAIL_REGEXP, PASSWORD_REGEXP } = require('../configs/constants');
 
 const createUserValidator = Joi.object({
@@ -12,7 +13,12 @@ const updateUserValidator = Joi.object({
     email: Joi.string().regex(EMAIL_REGEXP).trim()
 })
 
+const idValidator = oidJoi.object({
+    id: oidJoi.objectId(),
+})
+
 module.exports = {
+    idValidator,
     createUserValidator,
-    updateUserValidator 
+    updateUserValidator
 }
