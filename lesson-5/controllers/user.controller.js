@@ -6,14 +6,11 @@ const userUtil = require('../utils/user.util');
 module.exports = {
     getUserById: async (req, res, next) => {
         try {
-            // const normalizedUser = userUtil.userNormalizator(req.user);
-
-            // res.json(normalizedUser);
             const { user_id } = req.params;
 
             const user = await User.findById(user_id)
 
-            res.status(statusCode.OK).json(user);
+            res.json(user);
         } catch (e) {
             next(e);
         }
@@ -23,7 +20,7 @@ module.exports = {
         try {
             const users = await User.find({});
 
-            res.status(statusCode.OK).json(users);
+            res.json(users);
         } catch (e) {
             next(e);
         }
@@ -34,7 +31,7 @@ module.exports = {
             const { user_id } = req.params;
             await User.findByIdAndDelete(user_id);
 
-            res.status(statusCode.OK).json('deleted');
+            res.json('deleted');
         } catch (e) {
             next(e);
         }
@@ -59,7 +56,7 @@ module.exports = {
             const { user_id } = req.params;
             const user = await User.findByIdAndUpdate(user_id, req.body);
 
-            res.status(statusCode.OK).json(user);
+            res.json(user);
         } catch (e) {
             next(e);
         }
