@@ -24,7 +24,6 @@ module.exports = {
             const { book_id } = req.params;
 
             const book = await Book.findById(book_id);
-            console.log('book', book)
 
             if (!book) {
                 throw new ErrorHandler(statusCode.NOT_FOUND, 'Book not found');
