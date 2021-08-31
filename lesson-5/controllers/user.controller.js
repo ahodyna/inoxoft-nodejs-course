@@ -1,9 +1,14 @@
 const { User } = require('../dataBase');
 const statusCode = require('../configs/statusCodes.enum');
+const passwordService = require('../services/password.services');
+const userUtil = require('../utils/user.util');
 
 module.exports = {
     getUserById: async (req, res, next) => {
         try {
+            // const normalizedUser = userUtil.userNormalizator(req.user);
+
+            // res.json(normalizedUser);
             const { user_id } = req.params;
 
             const user = await User.findById(user_id)
@@ -37,9 +42,14 @@ module.exports = {
 
     createUser: async (req, res, next) => {
         try {
-            const user = await User.create(req.body);
 
-            res.status(statusCode.CREATED).json(user);
+            const { password } = req.body;
+
+            const hashPassword = await passwordService.hash(password);
+            const user = await User.create({ ...req.body, password: hashPassword });
+
+            const normalizedUser = userUtil.userNormalizator(user);
+            res.status(201).json(normalizedUser);
         } catch (e) {
             next(e);
         }
