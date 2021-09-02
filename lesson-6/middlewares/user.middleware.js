@@ -4,13 +4,11 @@ const userValidators = require('../validators/user.validator')
 const statusCode = require('../configs/statusCodes.enum');
 
 module.exports = {
-    isEmailExist: async (req, res, next) => {
+    isEmailExist: (req, res, next) => {
         try {
-            const { email = '' } = req.body;
+            const { user } = req;
 
-            const userByEmail = await User.findOne({ email: email.trim() });
-
-            if (userByEmail) {
+            if (user) {
                 throw new ErrorHandler(statusCode.EXIST, 'Email is already exist');
             }
 
@@ -19,7 +17,39 @@ module.exports = {
             next(e);
         }
     },
+    isUserByIdExist: (req, res, next) => {
+        try {
+            const { user } = req;
 
+            if (!user) {
+                throw new ErrorHandler(statusCode.NOT_FOUND, 'User not found');
+            }
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+    checkUserRole: (roleArr = []) => (req, res, next) => {
+        try {
+            if (!roleArr.length) {
+                return next();
+            }
+            next()
+        } catch (e) {
+            next(e);
+        }
+    },
+    getUserByDynamicParam: (paramName, searchIn = 'body', dbField = paramName) => async (req, res, next) => {
+        try {
+            const value = req[searchIn][paramName];
+            const user = await User.findOne({ [paramName]: value });
+
+            req.user = user
+            next()
+        } catch (e) {
+            next(e)
+        }
+    },
     isIdValid: async (req, res, next) => {
         try {
             const { user_id } = req.params;
@@ -54,31 +84,4 @@ module.exports = {
             next(e)
         }
     },
-    isUserByIdExist: async (req, res, next) => {
-        try {
-            const { user_id } = req.params;
-
-            const user = await User.findById(user_id).select('+password');
-
-            if (!user) {
-                throw new ErrorHandler(statusCode.NOT_FOUND, 'User not found');
-            }
-            next();
-        } catch (e) {
-            next(e);
-        }
-    },
-    checkUserRole: (roleArr = []) => (req, res, next) => {
-        try {
-
-
-            if (!roleArr.length) {
-                return next();
-            }
-            next()
-        } catch (e) {
-            next(e);
-        }
-    },
-    
-}
+};
