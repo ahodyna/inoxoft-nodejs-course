@@ -8,7 +8,7 @@ module.exports = {
         try {
             const { user_id } = req.params;
 
-            const user = await User.findById(user_id)
+            const user = await User.findById(user_id);
 
             res.json(user);
         } catch (e) {
@@ -39,7 +39,6 @@ module.exports = {
 
     createUser: async (req, res, next) => {
         try {
-
             const { password } = req.body;
 
             const hashPassword = await passwordService.hash(password);

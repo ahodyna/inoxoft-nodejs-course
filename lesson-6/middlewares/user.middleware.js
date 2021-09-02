@@ -1,6 +1,6 @@
 const { User } = require('../dataBase');
 const ErrorHandler = require('../errors/ErrorHandler');
-const userValidators = require('../validators/user.validator')
+const userValidators = require('../validators/user.validator');
 const statusCode = require('../configs/statusCodes.enum');
 
 module.exports = {
@@ -34,7 +34,7 @@ module.exports = {
             if (!roleArr.length) {
                 return next();
             }
-            next()
+            next();
         } catch (e) {
             next(e);
         }
@@ -44,18 +44,18 @@ module.exports = {
             const value = req[searchIn][paramName];
             const user = await User.findOne({ [paramName]: value });
 
-            req.user = user
-            next()
+            req.user = user;
+            next();
         } catch (e) {
-            next(e)
+            next(e);
         }
     },
-    isIdValid: async (req, res, next) => {
+    isIdValid: (req, res, next) => {
         try {
             const { user_id } = req.params;
-            const { error } = userValidators.idValidator.validate({ id: user_id })
+            const { error } = userValidators.idValidator.validate({ id: user_id });
             if (error) {
-                throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message)
+                throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message);
             }
             next();
         } catch (e) {
@@ -64,24 +64,24 @@ module.exports = {
     },
     isValidUserData: (req, res, next) => {
         try {
-            const { error, value } = userValidators.createUserValidator.validate(req.body)
+            const { error, value } = userValidators.createUserValidator.validate(req.body);
             if (error) {
-                throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message)
+                throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message);
             }
-            next()
+            next();
         } catch (e) {
-            next(e)
+            next(e);
         }
     },
     isUpdateUserValidator: (req, res, next) => {
         try {
-            const { error, value } = userValidators.updateUserValidator.validate(req.body)
+            const { error, value } = userValidators.updateUserValidator.validate(req.body);
             if (error) {
-                throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message)
+                throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message);
             }
-            next()
+            next();
         } catch (e) {
-            next(e)
+            next(e);
         }
     },
 };

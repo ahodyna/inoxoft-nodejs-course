@@ -1,6 +1,5 @@
 const userNormalizator = (userToNormalize) => {
     const filedToRemove = ['password'];
-    
     filedToRemove.forEach((filed) => {
         delete userToNormalize[filed];
     });

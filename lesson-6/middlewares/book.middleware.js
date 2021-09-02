@@ -4,13 +4,11 @@ const bookValidators = require('../validators/book.validator');
 const statusCode = require('../configs/statusCodes.enum');
 
 module.exports = {
-    isBookExist: async (req, res, next) => {
+    isBookExist: (req, res, next) => {
         try {
-            const { name = '' } = req.body;
+            const { book } = req;
 
-            const bookName = await Book.findOne({ name: name.trim() });
-
-            if (bookName) {
+            if (book) {
                 throw new ErrorHandler(statusCode.EXIST, 'Book is already exist');
             }
 
@@ -19,13 +17,36 @@ module.exports = {
             next(e);
         }
     },
-    isIdBookValid: async (req, res, next) => {
+    isBookByIdExist: (req, res, next) => {
+        try {
+            const { book } = req;
+
+            if (!book) {
+                throw new ErrorHandler(statusCode.NOT_FOUND, 'Book not found');
+            }
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+    isIdBookValid: (req, res, next) => {
         try {
             const { book_id } = req.params;
-            const { error } = userValidators.idValidator.validate({ id: book_id })
+            const { error } = bookValidators.idValidator.validate({ id: book_id });
             if (error) {
-                throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message)
+                throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message);
             }
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+    getBookByDynamicParam: (paramName, searchIn = 'body', dbField = paramName) => async (req, res, next) => {
+        try {
+            const value = req[searchIn][paramName];
+            const book = await Book.findOne({ [paramName]: value });
+
+            req.book = book;
             next();
         } catch (e) {
             next(e);
@@ -33,34 +54,20 @@ module.exports = {
     },
     isValidBookData: (req, res, next) => {
         try {
-            const { error, value } = bookValidators.createBookValidator.validate(req.body)
+            const { error, value } = bookValidators.createBookValidator.validate(req.body);
             if (error) {
-                throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message)
+                throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message);
             }
-            next()
+            next();
         } catch (e) {
-            next(e)
+            next(e);
         }
     },
     isUpdateBookValidator: (req, res, next) => {
         try {
-            const { error, value } = bookValidators.updateBookValidator.validate(req.body)
+            const { error, value } = bookValidators.updateBookValidator.validate(req.body);
             if (error) {
-                throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message)
-            }
-            next()
-        } catch (e) {
-            next(e)
-        }
-    },
-    isBookByIdExist: async (req, res, next) => {
-        try {
-            const { book_id } = req.params;
-
-            const book = await Book.findById(book_id);
-
-            if (!book) {
-               throw new ErrorHandler(statusCode.NOT_FOUND, 'Book not found')
+                throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message);
             }
             next();
         } catch (e) {

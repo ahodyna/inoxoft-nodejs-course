@@ -6,7 +6,7 @@ module.exports = {
         try {
             const { book_id } = req.params;
 
-            const book = await Book.findById(book_id)
+            const book = await Book.findById(book_id);
 
             res.json(book);
         } catch (e) {

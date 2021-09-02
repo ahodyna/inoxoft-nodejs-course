@@ -6,5 +6,4 @@ module.exports = {
     NOT_FOUND: 404,
     EXIST: 409,
     SERVERE_RROR: 500
-
 };
