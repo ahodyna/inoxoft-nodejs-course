@@ -6,6 +6,10 @@
     "express-handlebars": "^5.3.3",
     "joi": "^17.4.2",
     "joi-oid": "^1.1.2",
-    "mongoose": "^6.0.2"
+    "mongoose": "^6.0.2",
+    "pm2": "^5.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
   }
 }

@@ -23,7 +23,7 @@ module.exports = {
     isIdValid: async (req, res, next) => {
         try {
             const { user_id } = req.params;
-            const { error} = userValidators.idValidator.validate({id: user_id})
+            const { error } = userValidators.idValidator.validate({ id: user_id })
             if (error) {
                 throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message)
             }
@@ -68,4 +68,17 @@ module.exports = {
             next(e);
         }
     },
-};
+    checkUserRole: (roleArr = []) => (req, res, next) => {
+        try {
+
+
+            if (!roleArr.length) {
+                return next();
+            }
+            next()
+        } catch (e) {
+            next(e);
+        }
+    },
+    
+}
