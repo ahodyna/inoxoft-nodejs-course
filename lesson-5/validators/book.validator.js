@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const oidJoi = require('joi-oid');
+const { ID_REGEXP } = require('../configs/constants');
 
 const createBookValidator = Joi.object({
     name: Joi.string().min(2).max(30).required(),
@@ -14,7 +14,7 @@ const updateBookValidator = Joi.object({
 });
 
 const idValidator = oidJoi.object({
-    id: oidJoi.objectId(),
+    book_id: Joi.string().trim().regex(ID_REGEXP)
 });
 
 module.exports = {

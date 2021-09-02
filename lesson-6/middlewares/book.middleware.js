@@ -31,8 +31,7 @@ module.exports = {
     },
     isIdBookValid: (req, res, next) => {
         try {
-            const { book_id } = req.params;
-            const { error } = bookValidators.idValidator.validate({ id: book_id });
+            const { error } = bookValidators.idValidator.validate(req.params);
             if (error) {
                 throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message);
             }

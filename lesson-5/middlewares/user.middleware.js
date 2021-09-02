@@ -22,8 +22,7 @@ module.exports = {
 
     isIdValid: async (req, res, next) => {
         try {
-            const { user_id } = req.params;
-            const { error} = userValidators.idValidator.validate({id: user_id})
+            const { error } = userValidators.idValidator.validate(req.params);
             if (error) {
                 throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message)
             }
