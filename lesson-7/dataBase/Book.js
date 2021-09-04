@@ -16,6 +16,11 @@ const bookSchema = new Schema({
         required: true,
         trim: true,
     },
+    ownerId: {
+        type: String,
+        required: true,
+        trim: true,
+    }
 }, { timestamps: true });
 
 module.exports = model('book', bookSchema);

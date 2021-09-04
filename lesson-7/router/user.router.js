@@ -20,7 +20,7 @@ router.use('/:user_id', isIdValid, getUserByDynamicParam('user_id', 'params', '_
 
 router.get('/:user_id', checkUserRole(), userController.getUserById);
 
-router.delete('/:user_id',authMiddlewares.checkAccessToken,  userController.deleteUserById);
+router.delete('/:user_id', authMiddlewares.checkAccessToken,  userController.deleteUserById);
 
 router.put('/:user_id', isUpdateUserValidator, userController.updateUser);
 

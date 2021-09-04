@@ -33,4 +33,20 @@ module.exports = {
             next(e);
         }
     },
+    refreshToken: async (req, res, next) => {
+        try {
+            const token = req.get(constants.AUTHORIZATION);
+            const { currentUser } = req;
+
+            const tokenPair = jwtService.generateTokenPair();
+            await OAuth.findOneAndUpdate({ token }, tokenPair);
+
+            res.json({
+                ...tokenPair,
+                user: userUtil.userNormalizator(currentUser)
+            });
+        } catch (e) {
+            next(e);
+        }
+    },
 }

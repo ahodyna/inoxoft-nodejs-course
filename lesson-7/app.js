@@ -16,6 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(staticPath));
 
+
 const { userRouter, bookRouter, authRouter } = require('./router');
 
 app.use('/auth', authRouter);

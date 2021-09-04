@@ -8,8 +8,9 @@ module.exports = {
         try {
             const { user_id } = req.params;
 
-            const user = await User.findById(user_id);
+            let user = await User.findById(user_id);
 
+            user = userUtil.userNormalizator(user)
             res.json(user);
         } catch (e) {
             next(e);
@@ -53,8 +54,9 @@ module.exports = {
     updateUser: async (req, res, next) => {
         try {
             const { user_id } = req.params;
-            const user = await User.findByIdAndUpdate(user_id, req.body);
+            let user = await User.findByIdAndUpdate(user_id, req.body);
 
+            user = userUtil.userNormalizator(user)
             res.json(user);
         } catch (e) {
             next(e);

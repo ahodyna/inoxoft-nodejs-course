@@ -10,7 +10,7 @@ const OAuthSchema = new Schema({
         type: String,
         required: true
     },
-    user:{
+    [dataBaseTablesEnum.USER]:{
         type: Schema.Types.ObjectId,
         required: true,
         ref: dataBaseTablesEnum.USER

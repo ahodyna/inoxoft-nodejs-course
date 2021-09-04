@@ -1,5 +1,6 @@
 const { Book } = require('../dataBase');
 const statusCode = require('../configs/statusCodes.enum');
+const ErrorHandler = require('../errors/ErrorHandler');
 
 module.exports = {
     getBookById: async (req, res, next) => {
@@ -24,12 +25,29 @@ module.exports = {
         }
     },
 
-    deleteBookById: async (req, res) => {
+    deleteBookById: async (req, res, next) => {
         try {
-            const { books_id } = req.params;
-            await Book.findByIdAndDelete(books_id);
+            const { book_id } = req.params;
+            const userId = req.loggedUser._id.toString();
+            const book = await Book.findById(book_id);
+
+            if (!book) {
+                throw new ErrorHandler(statusCode.NOT_FOUND, 'Not found')
+            }
+
+            const bookOwnerId = book.ownerId
+
+            console.log(typeof userId, typeof bookOwnerId)
+
+            if (userId !== bookOwnerId) {
+
+                throw new ErrorHandler(statusCode.UNAUTHORIZED, 'Unauthorized')
+            }
+
+            await Book.findByIdAndDelete(book_id);
 
             res.json('deleted');
+
         } catch (e) {
             next(e);
         }
@@ -37,9 +55,12 @@ module.exports = {
 
     addBook: async (req, res, next) => {
         try {
-            const book = await Book.create(req.body);
+            const book = req.body
+            book.ownerId = req.loggedUser._id;
 
-            res.status(statusCode.CREATED).json(book);
+            const savedBook = await Book.create(book);
+
+            res.status(statusCode.CREATED).json(savedBook);
         } catch (e) {
             next(e);
         }
