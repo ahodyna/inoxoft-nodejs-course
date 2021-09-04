@@ -34,12 +34,7 @@ module.exports = {
             if (!book) {
                 throw new ErrorHandler(statusCode.NOT_FOUND, 'Not found')
             }
-
-            const bookOwnerId = book.ownerId
-
-            console.log(typeof userId, typeof bookOwnerId)
-
-            if (userId !== bookOwnerId) {
+            if (userId !== book.ownerId) {
 
                 throw new ErrorHandler(statusCode.UNAUTHORIZED, 'Unauthorized')
             }
@@ -68,6 +63,17 @@ module.exports = {
     updateBookInfo: async (req, res, next) => {
         try {
             const { book_id } = req.params;
+            const userId = req.loggedUser._id.toString();
+            const book = await Book.findById(book_id);
+
+            if (!book) {
+                throw new ErrorHandler(statusCode.NOT_FOUND, 'Not found')
+            }
+
+            if (userId !== book.ownerId) {
+
+                throw new ErrorHandler(statusCode.UNAUTHORIZED, 'Unauthorized')
+            }
             const updatedBook = await Book.findByIdAndUpdate(book_id, req.body);
 
             res.json(updatedBook);

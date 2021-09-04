@@ -22,6 +22,6 @@ router.get('/:user_id', checkUserRole(), userController.getUserById);
 
 router.delete('/:user_id', authMiddlewares.checkAccessToken,  userController.deleteUserById);
 
-router.put('/:user_id', isUpdateUserValidator, userController.updateUser);
+router.put('/:user_id', authMiddlewares.checkAccessToken, isUpdateUserValidator, userController.updateUser);
 
 module.exports = router;
