@@ -16,8 +16,13 @@ const idValidator = Joi.object({
     user_id: Joi.string().trim().regex(ID_REGEXP)
 });
 
+const passwordValidator = Joi.object({
+    password: Joi.string().regex(PASSWORD_REGEXP).trim().required()
+})
+
 module.exports = {
     idValidator,
+    passwordValidator,
     createUserValidator,
     updateUserValidator
 };

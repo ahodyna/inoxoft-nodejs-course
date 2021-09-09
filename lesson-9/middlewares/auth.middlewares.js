@@ -2,14 +2,14 @@ const { constants } = require('../configs');
 const ErrorHandler = require('../errors/ErrorHandler');
 const statusCode = require('../configs/statusCodes.enum');
 const { jwtService } = require('../services');
-const { OAuth } = require('../dataBase');
+const { OAuth,ActionToken } = require('../dataBase');
 const dataBaseTablesEnum = require('../configs/dataBaseTables.enum');
+const { passwordValidator } = require('../validators/user.validator')
 
 module.exports = {
     isAdmin: (req, res, next) => {
         try {
             const { loggedUser } = req;
-            console.log('loggedUser', loggedUser)
 
             if (loggedUser.role !== 'admin') {
                 throw new ErrorHandler(statusCode.FORBIDDEN, ' FORBIDDEN');
@@ -19,7 +19,6 @@ module.exports = {
         } catch (e) {
             next(e);
         }
-
     },
     checkAccessToken: async (req, res, next) => {
         try {
@@ -74,9 +73,7 @@ module.exports = {
 
             await jwtService.verifyActionToken(actionType, token);
 
-            const tokenFromDB = await ActionToken.findOne({ token });
-
-            await tokenFromDB.testMethod();
+            const tokenFromDB = await ActionToken.findOne({ token }).populate(dataBaseTablesEnum.USER);
 
             if (!tokenFromDB) {
                 throw new ErrorHandler(statusCode.UNAUTHORIZED, 'Invalid token');
@@ -84,6 +81,18 @@ module.exports = {
 
             req.currentUser = tokenFromDB.user;
 
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+    validatePassword: (req, res, next) => {
+        try {
+            const { error, value } = passwordValidator.validate(req.body);
+            if (error) {
+                throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message);
+            }
+            req.body = value
             next();
         } catch (e) {
             next(e);

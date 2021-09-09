@@ -16,7 +16,6 @@ const { DB_CONNECT_URL, PORT } = require('./configs/config');
 
 async function initDatabase(mongoose) {
     const admin = await User.findOne({ role: userRolesEnum.ADMIN });
-    console.log('admin exists: ', admin != null)
 
     if (admin === null) {
         const adminEmail = 'olena.bondarenko023@gmail.com';
