@@ -18,7 +18,7 @@ async function initDatabase(mongoose) {
     const admin = await User.findOne({ role: userRolesEnum.ADMIN });
 
     if (admin === null) {
-        const adminEmail = 'olena.bondarenko023@gmail.com';
+        const adminEmail = 'post.nodejs@protonmail.com';
         const adminPassword = Math.floor(Math.random() * 100000) + 'abcDf'+'!'
         const adminName = 'super-admin'
         const hashPassword = await passwordService.hash(adminPassword.toString());

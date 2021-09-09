@@ -40,12 +40,12 @@ module.exports = {
 
     createUser: async (req, res, next) => {
         try {
-            const { password, name } = req.body;
+            const { password, name, email } = req.body;
 
             const hashPassword = await passwordService.hash(password);
             const user = await User.create({ ...req.body, password: hashPassword });
 
-            await emailService.sendMail('olena.bondarenko023@gmail.com', emailActionsEnum.WELCOME, {userName: name})
+            await emailService.sendMail(email, emailActionsEnum.WELCOME, {userName: name})
 
             const normalizedUser = userUtil.userNormalizator(user);
             res.status(statusCodesEnum.CREATED).json(normalizedUser);

@@ -6,12 +6,12 @@ const userUtil = require('../utils/user.util');
 module.exports = {
     createAdmin: async (req, res, next) => {
         try {
-            const { password, name } = req.body;
+            const { password, name, email } = req.body;
 
             const hashPassword = await passwordService.hash(password);
             const user = await User.create({ ...req.body, password: hashPassword, role: 'admin' });
 
-            await emailService.sendMail('olena.bondarenko023@gmail.com', emailActionsEnum.ADMIN_WELCOME, {adminLogin: name, adminPassword: password})
+            await emailService.sendMail(email , emailActionsEnum.ADMIN_WELCOME, {adminLogin: name, adminPassword: password})
 
             const normalizedUser = userUtil.userNormalizator(user);
             res.status(statusCodesEnum.CREATED).json(normalizedUser);

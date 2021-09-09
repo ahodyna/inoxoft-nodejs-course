@@ -55,7 +55,7 @@ module.exports = {
             const actionToken = jwtService.generateActionToken(actionTypesEnum.FORGOT_PASS);
 
             await ActionToken.create({ token: actionToken, user: user._id });
-            await emailService.sendMail('olena.bondarenko023@gmail.com', emailActionsEnum.FORGOT_PASSWORD, { forgotPasswordUrl: `${configs.FRONTED_URL}/forgot?token=${actionToken}` })
+            await emailService.sendMail(user.email, emailActionsEnum.FORGOT_PASSWORD, { forgotPasswordUrl: `${configs.FRONTED_URL}/forgot?token=${actionToken}` })
 
             res.json('Email was sent');
         } catch (e) {
