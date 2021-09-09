@@ -16,7 +16,7 @@ module.exports = {
         try {
             const secret = tokenType === 'access' ? configs.ACCESS_TOKEN_SECRET : config.REFRESH_TOKEN_SECRET;
 
-            jwt.verify(token, secret)
+            jwt.verify(token, secret);
         } catch (e) {
             throw new ErrorHandler(statusCodesEnum.UNAUTHORIZED, 'Invalid token')
         }

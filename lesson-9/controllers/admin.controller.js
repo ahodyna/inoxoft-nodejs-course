@@ -3,7 +3,6 @@ const { statusCodesEnum, emailActionsEnum } = require('../configs')
 const { emailService, passwordService } = require('../services');
 const userUtil = require('../utils/user.util');
 
-
 module.exports = {
     createAdmin: async (req, res, next) => {
         try {

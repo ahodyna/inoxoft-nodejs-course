@@ -1,20 +1,14 @@
 const router = require('express').Router();
 
-const {createAdmin} = require('../controllers/admin.controller');
-const authMiddlewares = require('../middlewares/auth.middlewares');
-const {
-  
-    getUserByDynamicParam,
-    checkUserRole,
-    isIdValid,
-    isUpdateUserValidator,
-    isEmailExist,
-    isValidUserData,
-    isUserByIdExist
-} = require('../middlewares/user.middleware');
+const { createAdmin } = require('../controllers/admin.controller');
+const { authMiddlewares, userMiddlewares } = require('../middlewares');
 
-
-router.post('/admins', authMiddlewares.checkAccessToken, authMiddlewares.isAdmin, isValidUserData, getUserByDynamicParam('email'), isEmailExist, createAdmin);
-
+router.post('/admins',
+    authMiddlewares.checkAccessToken,
+    authMiddlewares.isAdmin,
+    userMiddlewares.isValidUserData,
+    userMiddlewares.getUserByDynamicParam('email'),
+    userMiddlewares.isEmailExist,
+    createAdmin);
 
 module.exports = router;

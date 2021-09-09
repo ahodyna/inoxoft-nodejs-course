@@ -2,7 +2,7 @@ const { constants } = require('../configs');
 const ErrorHandler = require('../errors/ErrorHandler');
 const statusCode = require('../configs/statusCodes.enum');
 const { jwtService } = require('../services');
-const { OAuth,ActionToken } = require('../dataBase');
+const { OAuth, ActionToken } = require('../dataBase');
 const dataBaseTablesEnum = require('../configs/dataBaseTables.enum');
 const { passwordValidator } = require('../validators/user.validator')
 
@@ -14,7 +14,6 @@ module.exports = {
             if (loggedUser.role !== 'admin') {
                 throw new ErrorHandler(statusCode.FORBIDDEN, ' FORBIDDEN');
             }
-
             next();
         } catch (e) {
             next(e);
@@ -27,7 +26,7 @@ module.exports = {
             if (!token) {
                 throw new ErrorHandler(statusCode.UNAUTHORIZED, 'No token');
             }
-            await jwtService.verifyToken(token)
+            await jwtService.verifyToken(token);
 
             const tokenFromDB = await OAuth.findOne({ access_token: token }).populate(dataBaseTablesEnum.USER);
 
@@ -36,9 +35,9 @@ module.exports = {
             }
             req.loggedUser = tokenFromDB.user;
 
-            next()
+            next();
         } catch (e) {
-            next(e)
+            next(e);
         }
     },
 
@@ -58,9 +57,9 @@ module.exports = {
             }
             req.loggedUser = tokenFromDB.user;
 
-            next()
+            next();
         } catch (e) {
-            next(e)
+            next(e);
         }
     },
     checkActionToken: (actionType) => async (req, res, next) => {
@@ -92,7 +91,7 @@ module.exports = {
             if (error) {
                 throw new ErrorHandler(statusCode.BAD_REQUEST, error.details[0].message);
             }
-            req.body = value
+            req.body = value;
             next();
         } catch (e) {
             next(e);
