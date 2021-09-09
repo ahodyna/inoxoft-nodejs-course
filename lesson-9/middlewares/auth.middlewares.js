@@ -6,6 +6,21 @@ const { OAuth } = require('../dataBase');
 const dataBaseTablesEnum = require('../configs/dataBaseTables.enum');
 
 module.exports = {
+    isAdmin: (req, res, next) => {
+        try {
+            const { loggedUser } = req;
+            console.log('loggedUser', loggedUser)
+
+            if (loggedUser.role !== 'admin') {
+                throw new ErrorHandler(statusCode.FORBIDDEN, ' FORBIDDEN');
+            }
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+
+    },
     checkAccessToken: async (req, res, next) => {
         try {
             const token = req.get(constants.AUTHORIZATION);
@@ -27,7 +42,7 @@ module.exports = {
             next(e)
         }
     },
-    
+
     checkRefreshToken: async (req, res, next) => {
         try {
             const token = req.get(constants.AUTHORIZATION);

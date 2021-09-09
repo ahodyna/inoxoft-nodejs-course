@@ -14,22 +14,22 @@ const app = express();
 const { DB_CONNECT_URL, PORT } = require('./configs/config');
 
 
-// async function initDatabase(mongoose) {
-//     const admin = await User.findOne({ role: userRolesEnum.ADMIN });
-//     console.log('admin: ', admin)
+async function initDatabase(mongoose) {
+    const admin = await User.findOne({ role: userRolesEnum.ADMIN });
+    console.log('admin exists: ', admin != null)
 
-//     if (admin == null || true) {
-//         const adminEmail = 'olena.bondarenko023@gmail.com';
-//         const adminPassword = Math.floor(Math.random() * 100000)
-//         const adminName = 'super-admin'
-//         const hashPassword = await passwordService.hash(adminPassword.toString());
-//         // const admin = await User.create({ name: adminName, password: hashPassword, email: adminEmail, role: userRolesEnum.ADMIN});
-//         await emailService.sendMail(adminEmail, emailActionsEnum.ADMIN_WELCOME, {adminLogin: adminName, adminPassword: adminPassword})
-//     }
-// }
+    if (admin === null) {
+        const adminEmail = 'olena.bondarenko023@gmail.com';
+        const adminPassword = Math.floor(Math.random() * 100000) + 'abcDf'+'!'
+        const adminName = 'super-admin'
+        const hashPassword = await passwordService.hash(adminPassword.toString());
+        const admin = await User.create({ name: adminName, password: hashPassword, email: adminEmail, role: userRolesEnum.ADMIN});
+        await emailService.sendMail(adminEmail, emailActionsEnum.ADMIN_WELCOME, {adminLogin: adminName, adminPassword: adminPassword})
+    }
+}
 
 mongoose.connect(DB_CONNECT_URL);
-// initDatabase(mongoose);
+initDatabase(mongoose);
 
 const staticPath = path.join(__dirname, 'static');
 
@@ -38,8 +38,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(staticPath));
 
 
-const { userRouter, bookRouter, authRouter } = require('./router');
+const { userRouter, bookRouter, authRouter, adminRouter } = require('./router');
 
+app.use('/admin', adminRouter);
 app.use('/auth', authRouter);
 app.use('/users', userRouter);
 app.use('/books', bookRouter);
