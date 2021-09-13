@@ -4,6 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const expressFileupload = require('express-fileupload');
+const helmet = require('helmet');
 
 const { User } = require('./dataBase');
 const userRolesEnum = require('./configs/userRoles.enum');
@@ -37,6 +38,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(staticPath));
 app.use(expressFileupload());
+app.use(helmet());
 
 if (process.env.ENV === 'dev'){
     const morgan = require('morgan');
