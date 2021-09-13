@@ -1,10 +1,12 @@
 require('dotenv').config()
 
 const express = require('express');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
 const expressFileupload = require('express-fileupload');
 const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 const { User } = require('./dataBase');
 const userRolesEnum = require('./configs/userRoles.enum');
@@ -13,7 +15,7 @@ const { emailActionsEnum } = require('./configs')
 
 const app = express();
 
-const { DB_CONNECT_URL, PORT } = require('./configs/config');
+const { DB_CONNECT_URL, PORT, ALLOWED_ORIGIN } = require('./configs/config');
 
 
 async function initDatabase(mongoose) {
@@ -26,7 +28,7 @@ async function initDatabase(mongoose) {
         const hashPassword = await passwordService.hash(adminPassword.toString());
         const admin = await User.create({ name: adminName, password: hashPassword, email: adminEmail, role: userRolesEnum.ADMIN });
         await emailService.sendMail(adminEmail, emailActionsEnum.ADMIN_WELCOME, { adminLogin: adminName, adminPassword: adminPassword })
-    }
+    } 
 }
 
 mongoose.connect(DB_CONNECT_URL);
@@ -34,6 +36,13 @@ initDatabase(mongoose);
 
 const staticPath = path.join(__dirname, 'static');
 
+app.use(cors({
+    origin: _configureCors
+}))
+app.use(rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 1000 
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(staticPath));
@@ -64,4 +73,20 @@ function _mainErrorHandler(err, req, res, next) {
         .json({
             message: err.message || 'Unknown error'
         });
-}
+};
+
+
+function _configureCors(origin, callback){
+    const whiteList = ALLOWED_ORIGIN.split(';');
+
+    if(!origin){
+        return callback(null, true);
+    }
+
+    if(!whiteList.includes(origin)){
+        return callback(new Error('Cors not allowed'), false);
+    }
+
+    return callback(null, true);
+     
+};
