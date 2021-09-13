@@ -41,12 +41,12 @@ module.exports = {
     createUser: async (req, res, next) => {
         try {
             const { password } = req.body;
-            const { avatar } = req.files;
 
             const hashPassword = await passwordService.hash(password);
             const user = await User.create({ ...req.body, password: hashPassword });
             
-            if (avatar) {
+            if (req.files) {
+                const { avatar } = req.files;
                 const { _id } = user;
                 const uploadFile = await s3Service.uploadImage(avatar, 'organization', _id);
 

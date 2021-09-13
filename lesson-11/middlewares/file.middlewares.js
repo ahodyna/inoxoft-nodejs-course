@@ -5,12 +5,14 @@ module.exports = {
 
     checkUserAvatar: (req, res, next) => {
         try {
-            const { avatar } = req.files;
+       
 
-            if (!avatar) {
+            if (!req.files) {
+                
                 next();
                 return;
             }
+            const { avatar } = req.files;
             const {name, size, mimetype} = avatar
             if (!constants.PHOTOS_MIMETYPES.includes(mimetype)) {
                 throw new ErrorHandler(statusCodesEnum.BAD_REQUEST, `Wrong file format ${name}`);

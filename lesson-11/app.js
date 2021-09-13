@@ -16,7 +16,7 @@ const { emailActionsEnum } = require('./configs')
 const app = express();
 
 const { DB_CONNECT_URL, PORT, ALLOWED_ORIGIN } = require('./configs/config');
-
+const cronJobs = require('./cron');
 
 async function initDatabase(mongoose) {
     const admin = await User.findOne({ role: userRolesEnum.ADMIN });
@@ -65,6 +65,7 @@ app.use(_mainErrorHandler);
 
 app.listen(PORT, () => {
     console.log(`App listening at http://localhost:${PORT}`);
+    cronJobs();
 });
 
 function _mainErrorHandler(err, req, res, next) {
