@@ -72,7 +72,9 @@ function _mainErrorHandler(err, req, res, next) {
     res
         .status(err.status || 500)
         .json({
-            message: err.message || 'Unknown error'
+            message: err.message || 'Unknown error',
+            customCode: err.customCode,
+            data: err.data
         });
 };
 

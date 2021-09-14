@@ -1,6 +1,7 @@
 const { Schema, model } = require('mongoose');
 const dataBaseTablesEnum = require('../configs/dataBaseTables.enum');
 const userRolesEnum = require('../configs/userRoles.enum');
+const { passwordService } = require('../services');
 
 const userSchema = new Schema({
     name: {
@@ -25,5 +26,15 @@ const userSchema = new Schema({
         enum: Object.values(userRolesEnum)
     }
 }, { timestamps: true });
+
+
+
+userSchema.statics = { // for schema // THIS - SCHEMA
+    async createWithHashPassword(userObject) {
+        const hashPassword = await passwordService.hash(userObject.password);
+
+        return this.create({ ...userObject, password: hashPassword });
+    }
+};
 
 module.exports = model(dataBaseTablesEnum.USER, userSchema);

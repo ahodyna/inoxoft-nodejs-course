@@ -40,15 +40,12 @@ module.exports = {
 
     createUser: async (req, res, next) => {
         try {
-            const { password } = req.body;
 
-            const hashPassword = await passwordService.hash(password);
-            const user = await User.create({ ...req.body, password: hashPassword });
+            let user = await User.createWithHashPassword(req.body);
             
-            if (req.files) {
-                const { avatar } = req.files;
+            if (req.files &&  req.files.avatar) {
                 const { _id } = user;
-                const uploadFile = await s3Service.uploadImage(avatar, 'organization', _id);
+                const uploadFile = await s3Service.uploadImage(req.files.avatar, 'organization', _id);
 
                 user = await User.findByIdAndUpdate(_id, { avatar: uploadFile.Location }, { new: true });
             }
