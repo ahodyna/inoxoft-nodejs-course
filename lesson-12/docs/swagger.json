@@ -1,0 +1,173 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Inoxoft Documentation",
+        "version": "0.0.1",
+        "description": "NodeJS Course"
+    },
+    "paths": {
+        "/books": {
+            "get": {
+                "tags": [
+                    "Book"
+                ],
+                "description": "Get all books",
+                "operationId": "getAllBooks",
+                "parameters": [
+                    {
+                        "name": "perPage",
+                        "in": "query",
+                        "description": "How many items will show on the page",
+                        "required": false,
+                        "default": 20,
+                        "example": 10,
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Book title",
+                                        "type": "string",
+                                        "example": "Harry Potter"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Book"
+                ],
+                "description": "Create book",
+                "operationId": "createBook",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "body",
+                        "description": "",
+                        "required": true,
+                        "default": "Harry Potter",
+                        "type": "string"
+                    },
+                    {
+                        "name": "author",
+                        "in": "body",
+                        "description": "",
+                        "required": true,
+                        "default": "Rowling J.K",
+                        "type": "string"
+                    },
+                    {
+                        "name": "price",
+                        "in": "body",
+                        "description": "",
+                        "required": true,
+                        "default": "12$",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success response"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/books/:book_id": {
+            "put": {
+                "tags": [
+                    "Book"
+                ],
+                "description": "Update book",
+                "operationId": "udateBook",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Auth token",
+                        "required": true,
+                        "default": "token_eednejndk",
+                        "type": "string"
+                    },
+                    {
+                        "name": "name",
+                        "in": "body",
+                        "description": "",
+                        "required": false,
+                        "default": "Harry Potter",
+                        "type": "string"
+                    },
+                    {
+                        "name": "author",
+                        "in": "body",
+                        "description": "",
+                        "required": false,
+                        "default": "Rowling J.K",
+                        "type": "string"
+                    },
+                    {
+                        "name": "price",
+                        "in": "body",
+                        "description": "",
+                        "required": false,
+                        "default": "12$",
+                        "type": "string"
+                    }
+                ],
+                "responses":{
+                    "200": {
+                        "description": "Success response"
+                    },
+                    "400": {
+                        "description": "Not valid data"
+                    },
+                    "401": {
+                        "description": "No token"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Book"
+                ],
+                "description": "Delete book",
+                "operationId": "deleteBook",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Auth token",
+                        "required": true,
+                        "default": "token_eednejndk",
+                        "type": "string"
+                    }
+                ],
+                "responses":{
+                    "200": {
+                        "description": "Delete"
+                    },
+                    "401": {
+                        "description": "No token"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        }
+    }
+}
