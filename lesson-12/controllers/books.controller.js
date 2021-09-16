@@ -1,6 +1,7 @@
 const { Book } = require('../dataBase');
 const statusCode = require('../configs/statusCodes.enum');
 const ErrorHandler = require('../errors/ErrorHandler');
+const bookService = require('../services/book.service');
 
 module.exports = {
     getBookById: async (req, res, next) => {
@@ -17,11 +18,11 @@ module.exports = {
 
     getAllBooks: async (req, res) => {
         try {
-            const books = await Book.find({});
+            const response = await bookService.findAll(req.query)
 
-            res.json(books);
+            res.json(response);
         } catch (e) {
-            next(e);
+            res.json({ message: e.message });
         }
     },
 

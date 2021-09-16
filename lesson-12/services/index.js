@@ -1,4 +1,5 @@
 module.exports = {
+    bookService: require('./book.service'),
     emailService: require('./email.service'),
     jwtService: require('./jwt.service'),
     passwordService: require('./password.services'),
