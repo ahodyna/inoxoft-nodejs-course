@@ -28,14 +28,22 @@
                     "200": {
                         "description": "Success response",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "properties": {
-                                    "name": {
-                                        "description": "Book title",
-                                        "type": "string",
-                                        "example": "Harry Potter"
-                                    }
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "description": "Book title",
+                                    "type": "string",
+                                    "example": "Harry Potter"
+                                },
+                                "author": {
+                                    "description": "Author name",
+                                    "type": "string",
+                                    "example": "Rowling J.K"
+                                },
+                                "price": {
+                                    "description": "Price of book",
+                                    "type": "number",
+                                    "example": "12"
                                 }
                             }
                         }
@@ -50,9 +58,17 @@
                 "operationId": "createBook",
                 "parameters": [
                     {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Auth token",
+                        "required": true,
+                        "default": "token_eednejndk",
+                        "type": "string"
+                    },
+                    {
                         "name": "name",
                         "in": "body",
-                        "description": "",
+                        "description": "Book title that we add to the store",
                         "required": true,
                         "default": "Harry Potter",
                         "type": "string"
@@ -60,7 +76,7 @@
                     {
                         "name": "author",
                         "in": "body",
-                        "description": "",
+                        "description": "Author that we add to the store",
                         "required": true,
                         "default": "Rowling J.K",
                         "type": "string"
@@ -68,18 +84,44 @@
                     {
                         "name": "price",
                         "in": "body",
-                        "description": "",
+                        "description": "Price that we add to the store",
                         "required": true,
-                        "default": "12$",
-                        "type": "string"
+                        "default": "12",
+                        "type": "number"
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Success response"
+                    "201": {
+                        "description": "Book was created",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "description": "Book title",
+                                    "type": "string",
+                                    "example": "Harry Potter"
+                                },
+                                "author": {
+                                    "description": "Author name",
+                                    "type": "string",
+                                    "example": "Rowling J.K"
+                                },
+                                "price": {
+                                    "description": "Price of book",
+                                    "type": "number",
+                                    "example": "12"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "No token"
+                    },
+                    "409": {
+                        "description": "Book is already exist"
                     }
                 }
             }
@@ -121,13 +163,33 @@
                         "in": "body",
                         "description": "",
                         "required": false,
-                        "default": "12$",
-                        "type": "string"
+                        "default": "12",
+                        "type": "number"
                     }
                 ],
-                "responses":{
+                "responses": {
                     "200": {
-                        "description": "Success response"
+                        "description": "Success response",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "description": "Book title",
+                                    "type": "string",
+                                    "example": "Harry Potter"
+                                },
+                                "author": {
+                                    "description": "Author name",
+                                    "type": "string",
+                                    "example": "Rowling J.K"
+                                },
+                                "price": {
+                                    "description": "Price of book",
+                                    "type": "number",
+                                    "example": "12"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Not valid data"
@@ -156,7 +218,7 @@
                         "type": "string"
                     }
                 ],
-                "responses":{
+                "responses": {
                     "200": {
                         "description": "Delete"
                     },
