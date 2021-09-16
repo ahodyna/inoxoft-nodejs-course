@@ -1,6 +1,6 @@
 const { User } = require('../dataBase');
 const { statusCodesEnum, emailActionsEnum } = require('../configs')
-const { emailService, passwordService, s3Service } = require('../services');
+const { emailService, passwordService, s3Service, userService } = require('../services');
 const userUtil = require('../utils/user.util');
 
 module.exports = {
@@ -19,11 +19,11 @@ module.exports = {
 
     getAllUsers: async (req, res) => {
         try {
-            const users = await User.find({});
+            const response = await userService.findAll(req.query)
 
-            res.json(users);
+            res.json(response);
         } catch (e) {
-            next(e);
+            res.json({ message: e.message });
         }
     },
 
@@ -42,8 +42,8 @@ module.exports = {
         try {
 
             let user = await User.createWithHashPassword(req.body);
-            
-            if (req.files &&  req.files.avatar) {
+
+            if (req.files && req.files.avatar) {
                 const { _id } = user;
                 const uploadFile = await s3Service.uploadImage(req.files.avatar, 'organization', _id);
 
